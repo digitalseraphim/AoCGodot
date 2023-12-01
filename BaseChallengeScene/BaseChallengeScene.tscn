@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://b4m81htppvxjv"]
+
+[ext_resource type="Script" path="res://BaseChallengeScene/BaseChallengeScene.cs" id="1_fnaaw"]
+[ext_resource type="PackedScene" uid="uid://dt6aufhhcw21t" path="res://ChallengeDataPanel/ChallengeDataPanel.tscn" id="2_vwjcu"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gg164"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ibm8w"]
+
+[node name="Main" type="Node2D"]
+material = SubResource("CanvasItemMaterial_gg164")
+script = ExtResource("1_fnaaw")
+
+[node name="DataPanel" parent="." instance=ExtResource("2_vwjcu")]
+offset_right = 0.0
+year = 2022
+day = 1
+DataButtonGroup = SubResource("ButtonGroup_ibm8w")
+
+[connection signal="RunCode" from="DataPanel" to="." method="DoRun"]

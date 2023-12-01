@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfg31dj1kjajl"]
+
+[ext_resource type="Script" path="res://AoC2023/Day1/Aoc2023_Day1.cs" id="1_pnovk"]
+[ext_resource type="PackedScene" uid="uid://dt6aufhhcw21t" path="res://ChallengeDataPanel/ChallengeDataPanel.tscn" id="2_si58n"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_23148"]
+
+[node name="Aoc2023_Day1" type="Node2D" node_paths=PackedStringArray("part1Ans", "debug")]
+script = ExtResource("1_pnovk")
+part1Ans = NodePath("Part1Answer")
+debug = NodePath("Debug")
+
+[node name="DataPanel" parent="." instance=ExtResource("2_si58n")]
+offset_right = 0.0
+year = 2023
+day = 1
+DataButtonGroup = SubResource("ButtonGroup_23148")
+
+[node name="Part1Answer" type="Label" parent="."]
+offset_left = 386.0
+offset_top = 179.0
+offset_right = 510.0
+offset_bottom = 202.0
+
+[node name="Debug" type="TextEdit" parent="."]
+offset_left = 394.0
+offset_top = 246.0
+offset_right = 691.0
+offset_bottom = 558.0
+
+[connection signal="RunCode" from="DataPanel" to="." method="DoRun"]
