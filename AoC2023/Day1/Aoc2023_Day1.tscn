@@ -1,31 +1,77 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfg31dj1kjajl"]
+[gd_scene load_steps=5 format=3 uid="uid://cfg31dj1kjajl"]
 
 [ext_resource type="Script" path="res://AoC2023/Day1/Aoc2023_Day1.cs" id="1_pnovk"]
 [ext_resource type="PackedScene" uid="uid://dt6aufhhcw21t" path="res://ChallengeDataPanel/ChallengeDataPanel.tscn" id="2_si58n"]
+[ext_resource type="PackedScene" uid="uid://b8thebcor80bh" path="res://ResultsPanel/ResultsPanel.tscn" id="3_u31pp"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_23148"]
 
-[node name="Aoc2023_Day1" type="Node2D" node_paths=PackedStringArray("part1Ans", "debug")]
-script = ExtResource("1_pnovk")
-part1Ans = NodePath("Part1Answer")
-debug = NodePath("Debug")
+[node name="MarginContainer" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="DataPanel" parent="." instance=ExtResource("2_si58n")]
-offset_right = 0.0
+[node name="Aoc2023_Day1" type="HBoxContainer" parent="." node_paths=PackedStringArray("resultsPanel", "progressBar1", "progressBar2", "tree1", "tree2")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 5
+script = ExtResource("1_pnovk")
+resultsPanel = NodePath("VBoxContainer/ResultsPanel")
+progressBar1 = NodePath("VBoxContainer/grid/ProgressBar")
+progressBar2 = NodePath("VBoxContainer/grid/ProgressBar2")
+tree1 = NodePath("VBoxContainer/grid/Tree")
+tree2 = NodePath("VBoxContainer/grid/Tree2")
+
+[node name="DataPanel" parent="Aoc2023_Day1" instance=ExtResource("2_si58n")]
+layout_mode = 2
 year = 2023
 day = 1
 DataButtonGroup = SubResource("ButtonGroup_23148")
 
-[node name="Part1Answer" type="Label" parent="."]
-offset_left = 386.0
-offset_top = 179.0
-offset_right = 510.0
-offset_bottom = 202.0
+[node name="VBoxContainer" type="VBoxContainer" parent="Aoc2023_Day1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
 
-[node name="Debug" type="TextEdit" parent="."]
-offset_left = 394.0
-offset_top = 246.0
-offset_right = 691.0
-offset_bottom = 558.0
+[node name="ResultsPanel" parent="Aoc2023_Day1/VBoxContainer" instance=ExtResource("3_u31pp")]
+layout_mode = 2
 
-[connection signal="RunCode" from="DataPanel" to="." method="DoRun"]
+[node name="grid" type="GridContainer" parent="Aoc2023_Day1/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
+columns = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Aoc2023_Day1/VBoxContainer/grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProgressBar2" type="ProgressBar" parent="Aoc2023_Day1/VBoxContainer/grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Tree" type="Tree" parent="Aoc2023_Day1/VBoxContainer/grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 5
+hide_root = true
+
+[node name="Tree2" type="Tree" parent="Aoc2023_Day1/VBoxContainer/grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 5
+hide_root = true
+
+[connection signal="RunCode" from="Aoc2023_Day1/DataPanel" to="Aoc2023_Day1" method="DoRun"]

@@ -1,12 +1,8 @@
 using Godot;
-using System;
 
-public partial class BaseChallengeScene : Node2D
+namespace AoCGodot;
+
+public abstract partial class BaseChallengeScene : Control
 {
-
-
-	void DoRun(string[] data)
-	{
-		GD.Print("data len - " + data.Length);
-	}
+	public abstract void DoRun(string[] data);
 }

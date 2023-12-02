@@ -3,59 +3,50 @@
 [ext_resource type="ButtonGroup" uid="uid://bmjotsqfv7nrh" path="res://ChallengeDataPanel/data_type_radio_button_group.tres" id="1_eptj5"]
 [ext_resource type="Script" path="res://ChallengeDataPanel/ChallengeDataPanel.cs" id="1_ve0xm"]
 
-[node name="Root" type="Control" node_paths=PackedStringArray("ChallengeLabel", "UseChallengeDataButton", "DownloadButton", "LoadButton", "RunButton", "TestDataTE")]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -967.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_ve0xm")
-ChallengeLabel = NodePath("VBoxContainer/ChallengeLabel")
-DataButtonGroup = ExtResource("1_eptj5")
-UseChallengeDataButton = NodePath("VBoxContainer/ChallengeDataRadioButton")
-DownloadButton = NodePath("VBoxContainer/ChallengeDataDownloadButton")
-LoadButton = NodePath("VBoxContainer/ChallengeDataLoadButton")
-RunButton = NodePath("VBoxContainer/RunButton")
-TestDataTE = NodePath("VBoxContainer/TextEdit")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
+[node name="VBoxContainer" type="VBoxContainer" node_paths=PackedStringArray("ChallengeLabel", "UseChallengeDataButton", "DownloadButton", "ChallengeDataInfoLabel", "RunButton", "TestDataTE")]
 offset_right = 178.0
 offset_bottom = 647.0
+script = ExtResource("1_ve0xm")
+ChallengeLabel = NodePath("ChallengeLabel")
+DataButtonGroup = ExtResource("1_eptj5")
+UseChallengeDataButton = NodePath("ChallengeDataRadioButton")
+DownloadButton = NodePath("ChallengeDataDownloadButton")
+ChallengeDataInfoLabel = NodePath("ChallengeDataInfoLabel")
+RunButton = NodePath("RunButton")
+TestDataTE = NodePath("TextEdit")
 
-[node name="ChallengeLabel" type="Label" parent="VBoxContainer"]
+[node name="ChallengeLabel" type="Label" parent="."]
 layout_mode = 2
+text = "Challenge"
 
-[node name="ChallengeDataRadioButton" type="CheckBox" parent="VBoxContainer"]
+[node name="ChallengeDataRadioButton" type="CheckBox" parent="."]
 layout_mode = 2
 button_group = ExtResource("1_eptj5")
 text = "Use Challenge Data"
 
-[node name="ChallengeDataDownloadButton" type="Button" parent="VBoxContainer"]
+[node name="ChallengeDataDownloadButton" type="Button" parent="."]
 layout_mode = 2
 text = "Download"
 
-[node name="ChallengeDataLoadButton" type="Button" parent="VBoxContainer"]
+[node name="ChallengeDataInfoLabel" type="Label" parent="."]
 layout_mode = 2
-disabled = true
-text = "Load Cached"
+text = "Challenge data
+"
 
-[node name="TestDataRadioButton" type="CheckBox" parent="VBoxContainer"]
+[node name="TestDataRadioButton" type="CheckBox" parent="."]
 layout_mode = 2
+button_pressed = true
 button_group = ExtResource("1_eptj5")
 text = "Use Test Data"
 
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
+[node name="TextEdit" type="TextEdit" parent="."]
 custom_minimum_size = Vector2(0, 425)
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="RunButton" type="Button" parent="VBoxContainer"]
+[node name="RunButton" type="Button" parent="."]
 layout_mode = 2
 text = "Run
 "
 
-[connection signal="pressed" from="VBoxContainer/ChallengeDataDownloadButton" to="." method="OnDownload"]
-[connection signal="pressed" from="VBoxContainer/ChallengeDataLoadButton" to="." method="OnLoad"]
-[connection signal="pressed" from="VBoxContainer/RunButton" to="." method="OnRun"]
+[connection signal="pressed" from="RunButton" to="." method="OnRun"]

@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8thebcor80bh"]
+
+[ext_resource type="Script" path="res://ResultsPanel/ResultsPanel.cs" id="1_agfk2"]
+
+[node name="ResultsPanel" type="HBoxContainer" node_paths=PackedStringArray("part1Result", "part2Result")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -326.0
+offset_bottom = -605.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_agfk2")
+part1Result = NodePath("Part1ResutTE")
+part2Result = NodePath("Part2ResultTE")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Part 1 Result:"
+
+[node name="Part1ResutTE" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+select_all_on_focus = true
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "Part 2 Result:"
+
+[node name="Part2ResultTE" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+select_all_on_focus = true
