@@ -114,8 +114,11 @@ public partial class ChallengeDataPanel : Control
 
 	void OnRun()
 	{
+		GD.Print("Pressed Button: ", DataButtonGroup.GetPressedButton());
+		GD.Print("UCDB: ", UseChallengeDataButton);
 		if (DataButtonGroup.GetPressedButton() == UseChallengeDataButton)
 		{
+			GD.Print("using ChallegeData");
 			EmitSignal(SignalName.RunCode, DataToLines(challengeData));
 		}
 		else

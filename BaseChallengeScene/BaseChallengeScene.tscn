@@ -1,12 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cysc6sybi0l83"]
+[gd_scene load_steps=4 format=3 uid="uid://cysc6sybi0l83"]
 
-[ext_resource type="Script" path="res://AoC2023/Day1/Aoc2023_Day1.cs" id="1_smny5"]
+[ext_resource type="Script" path="res://BaseChallengeScene/BaseChallengeScene.cs" id="1_10dci"]
 [ext_resource type="PackedScene" uid="uid://dt6aufhhcw21t" path="res://ChallengeDataPanel/ChallengeDataPanel.tscn" id="2_gu5oq"]
 [ext_resource type="PackedScene" uid="uid://b8thebcor80bh" path="res://ResultsPanel/ResultsPanel.tscn" id="3_5740y"]
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_23148"]
-
-[node name="MarginContainer" type="MarginContainer"]
+[node name="BaseScene" type="MarginContainer" node_paths=PackedStringArray("resultsPanel", "challengeDataPanel")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,60 +16,35 @@ theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
+script = ExtResource("1_10dci")
+resultsPanel = NodePath("hbox/VBoxContainer/ResultsPanel")
+challengeDataPanel = NodePath("hbox/VBoxContainer2/DataPanel")
 
-[node name="Aoc2023_Day1" type="HBoxContainer" parent="." node_paths=PackedStringArray("resultsPanel", "progressBar1", "progressBar2", "tree1", "tree2")]
+[node name="hbox" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 5
-script = ExtResource("1_smny5")
-resultsPanel = NodePath("VBoxContainer/ResultsPanel")
-progressBar1 = NodePath("VBoxContainer/grid/ProgressBar")
-progressBar2 = NodePath("VBoxContainer/grid/ProgressBar2")
-tree1 = NodePath("VBoxContainer/grid/Tree")
-tree2 = NodePath("VBoxContainer/grid/Tree2")
 
-[node name="DataPanel" parent="Aoc2023_Day1" instance=ExtResource("2_gu5oq")]
+[node name="VBoxContainer2" type="VBoxContainer" parent="hbox"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="hbox/VBoxContainer2"]
+layout_mode = 2
+text = "< Back"
+
+[node name="DataPanel" parent="hbox/VBoxContainer2" instance=ExtResource("2_gu5oq")]
 layout_mode = 2
 year = 2023
 day = 1
-DataButtonGroup = SubResource("ButtonGroup_23148")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Aoc2023_Day1"]
+[node name="VBoxContainer" type="VBoxContainer" parent="hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 5
 
-[node name="ResultsPanel" parent="Aoc2023_Day1/VBoxContainer" instance=ExtResource("3_5740y")]
+[node name="ResultsPanel" parent="hbox/VBoxContainer" instance=ExtResource("3_5740y")]
 layout_mode = 2
 
-[node name="grid" type="GridContainer" parent="Aoc2023_Day1/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/h_separation = 5
-theme_override_constants/v_separation = 5
-columns = 2
-
-[node name="ProgressBar" type="ProgressBar" parent="Aoc2023_Day1/VBoxContainer/grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ProgressBar2" type="ProgressBar" parent="Aoc2023_Day1/VBoxContainer/grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Tree" type="Tree" parent="Aoc2023_Day1/VBoxContainer/grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 5
-hide_root = true
-
-[node name="Tree2" type="Tree" parent="Aoc2023_Day1/VBoxContainer/grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 5
-hide_root = true
-
-[connection signal="RunCode" from="Aoc2023_Day1/DataPanel" to="Aoc2023_Day1" method="DoRun"]
+[connection signal="pressed" from="hbox/VBoxContainer2/BackButton" to="." method="DoBack"]
+[connection signal="RunCode" from="hbox/VBoxContainer2/DataPanel" to="." method="DoRun"]

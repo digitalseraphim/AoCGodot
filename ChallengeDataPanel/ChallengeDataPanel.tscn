@@ -49,4 +49,5 @@ layout_mode = 2
 text = "Run
 "
 
+[connection signal="pressed" from="ChallengeDataDownloadButton" to="." method="OnDownload"]
 [connection signal="pressed" from="RunButton" to="." method="OnRun"]

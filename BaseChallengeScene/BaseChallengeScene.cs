@@ -2,7 +2,17 @@ using Godot;
 
 namespace AoCGodot;
 
-public abstract partial class BaseChallengeScene : Control
+public partial class BaseChallengeScene : Control
 {
-	public abstract void DoRun(string[] data);
+	[Export]
+	protected ResultsPanel resultsPanel;
+	[Export]
+	protected ChallengeDataPanel challengeDataPanel;
+	public virtual void DoRun(string[] data){
+		GD.Print("base Run");
+	}
+
+	public void DoBack(){
+		GetTree().ChangeSceneToFile("res://MainScene/MainScene.tscn");
+	}
 }

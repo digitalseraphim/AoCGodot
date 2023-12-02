@@ -1,15 +1,10 @@
+using AoCGodot;
 using Godot;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace AoCGodot;
-
-public partial class Aoc2023_Day1 : BaseChallengeScene
+public partial class AoC2023_Day1 : BaseChallengeScene
 {
-	[Export]
-	ResultsPanel resultsPanel;
-
 	[Export]
 	ProgressBar progressBar1;
 	[Export]
@@ -19,18 +14,17 @@ public partial class Aoc2023_Day1 : BaseChallengeScene
 	Tree tree1;
 	[Export]
 	Tree tree2;
-
 	TreeItem root1 = null;
 	TreeItem root2 = null;
 
-	static readonly string NUM = "zero|one|two|three|four|five|six|seven|eight|nine|[0-9]";
+		static readonly string NUM = "zero|one|two|three|four|five|six|seven|eight|nine|[0-9]";
 	static readonly string[] nums = NUM.Split("|");
 
 	public override void DoRun(string[] data)
 	{
 		Thread t1 = new(new ThreadStart(() => DoPart1(data)));
 		Thread t2 = new(new ThreadStart(() => DoPart2(data)));
-
+		GD.Print("AOCD1 Run");
 		progressBar1.MaxValue = data.Length-1;
 		progressBar2.MaxValue = data.Length-1;
 		progressBar1.Value = 0;

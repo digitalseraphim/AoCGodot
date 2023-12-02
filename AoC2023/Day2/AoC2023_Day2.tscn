@@ -1,14 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4ty0aq4xaapx"]
+[gd_scene load_steps=3 format=3 uid="uid://dqbgvddog8eil"]
 
-[ext_resource type="Script" path="res://AoC2023/Day1/AoC2023_Day1.cs" id="1_8eblu"]
-[ext_resource type="PackedScene" uid="uid://cysc6sybi0l83" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_71rx8"]
+[ext_resource type="PackedScene" uid="uid://cysc6sybi0l83" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_acv6f"]
+[ext_resource type="Script" path="res://AoC2023/Day2/AoC2023_Day2.cs" id="2_salgg"]
 
-[node name="Aoc2023_Day1" node_paths=PackedStringArray("progressBar1", "progressBar2", "tree1", "tree2") instance=ExtResource("1_71rx8")]
-script = ExtResource("1_8eblu")
+[node name="Aoc2023_Day2" node_paths=PackedStringArray("progressBar1", "progressBar2", "tree1", "tree2") instance=ExtResource("1_acv6f")]
+script = ExtResource("2_salgg")
 progressBar1 = NodePath("hbox/VBoxContainer/grid/ProgressBar")
 progressBar2 = NodePath("hbox/VBoxContainer/grid/ProgressBar2")
 tree1 = NodePath("hbox/VBoxContainer/grid/Tree")
 tree2 = NodePath("hbox/VBoxContainer/grid/Tree2")
+numRed = 12
+numGreen = 13
+numBlue = 14
+
+[node name="DataPanel" parent="hbox/VBoxContainer2" index="1"]
+day = 2
 
 [node name="grid" type="GridContainer" parent="hbox/VBoxContainer" index="1"]
 layout_mode = 2
@@ -16,7 +22,6 @@ size_flags_vertical = 3
 theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
 columns = 2
-script = ExtResource("1_8eblu")
 
 [node name="ProgressBar" type="ProgressBar" parent="hbox/VBoxContainer/grid" index="0"]
 layout_mode = 2
@@ -30,7 +35,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 5
+columns = 4
 hide_root = true
 
 [node name="Tree2" type="Tree" parent="hbox/VBoxContainer/grid" index="3"]
