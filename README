@@ -1,0 +1,12 @@
+This project does follow the automation guidelines on the /r/adventofcode community wiki
+ ([https://www.reddit.com/r/adventofcode/wiki/faqs/automation]). Specifically:
+
+- Once inputs are downloaded, they are cached locally under your Godot user data directory. See
+[https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html#accessing-persistent-user-data-user] for the
+location based on your system.
+- Currently, to be able to pull down your inputs, you must grab your session id from your cookies in a browser. Save
+it in a file called "session" in the AoCGodot user data directory.
+- If you suspect your input is corrupted, you can delete the input file from the user data directory, restart AoCGodot,
+and there will be a button to redownload the input.
+- The User-Agent header is set to this repo's URL. If you fork and modify this project, please add your project's URL to
+the UA string.

@@ -15,10 +15,6 @@ public partial class MainScene : MarginContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		foreach(Node n in GetTree().Root.GetChildren()){
-			GD.Print("node - ", n.Name);
-		}
-
 		for(int year = 2015; year <= 2023; year++){
 			bool foundYear = false;
 
@@ -26,8 +22,6 @@ public partial class MainScene : MarginContainer
 				string resString = string.Format("res://AoC{0}/Day{1}/AoC{0}_Day{1}.tscn", year, day);
 				if(ResourceLoader.Exists(resString))
 				{
-					GD.Print("Found a scene", year, day);
-
 					if(!foundYear){
 						yearList.AddItem(year.ToString());
 						foundYear = true;
@@ -45,18 +39,15 @@ public partial class MainScene : MarginContainer
 	void OnYearSelected(int idx){
 		int year = yearList.GetItemText(idx).ToInt();
 		Dictionary<int, string> yearNodes = scenes[year];
-		GD.Print("Year Selected " + year);
 		for(int day = 1; day <= 25; day++){
 			Button button = grid.GetChild<Button>(day-1);
-			button.Disabled = false;//!yearNodes.ContainsKey(day);
+			button.Disabled = !yearNodes.ContainsKey(day);
 		}
 	}
 
 	void OnButtonPressed(int day){
 		int year = yearList.GetItemText(yearList.GetSelectedItems()[0]).ToInt();
-		GD.Print("Button pressed", year, day);
 		if(scenes.ContainsKey(year) && scenes[year].ContainsKey(day)){
-			GD.Print("have scene - ", scenes[year][day]);
 			GetTree().ChangeSceneToFile(scenes[year][day]);
 		}
 	}

@@ -86,26 +86,20 @@ public partial class ChallengeDataPanel : Control
 		string dataFileName = GetChallengeDataFileName();
 		GD.Print(string.Format("got {0} bytes", body.Length));
 		Directory.GetParent(dataFileName).Create();
-		FileStream f = File.OpenWrite(dataFileName);
-		f.Write(body);
-		f.Close();
+		File.WriteAllBytes(dataFileName, body);
 		LoadChallengeData();
 	}
 
 	void LoadChallengeData()
 	{
-		StreamReader f = File.OpenText(GetChallengeDataFileName());
-		challengeData = f.ReadToEnd();
-		f.Close();
+		challengeData = File.ReadAllText(GetChallengeDataFileName());
 		DownloadButton.Visible = false;
 		ChallengeDataInfoLabel.Text = string.Format("{0} lines", DataToLines(challengeData).Length);
 	}
 
 	void LoadTestData()
 	{
-		StreamReader f = File.OpenText(GetTestDataFileName());
-		TestDataTE.Text = f.ReadToEnd();
-		f.Close();
+		TestDataTE.Text = File.ReadAllText(GetTestDataFileName());
 	}
 
 	static string[] DataToLines(string data){
@@ -114,11 +108,8 @@ public partial class ChallengeDataPanel : Control
 
 	void OnRun()
 	{
-		GD.Print("Pressed Button: ", DataButtonGroup.GetPressedButton());
-		GD.Print("UCDB: ", UseChallengeDataButton);
 		if (DataButtonGroup.GetPressedButton() == UseChallengeDataButton)
 		{
-			GD.Print("using ChallegeData");
 			EmitSignal(SignalName.RunCode, DataToLines(challengeData));
 		}
 		else

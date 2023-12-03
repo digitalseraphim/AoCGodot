@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://ched4dhbgke5c"]
+
+[ext_resource type="PackedScene" uid="uid://cysc6sybi0l83" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_pyxr4"]
+[ext_resource type="Script" path="res://AoC2023/Day3/AoC2023_Day3.cs" id="2_2h2om"]
+[ext_resource type="FontFile" uid="uid://dhsv6r6l27jsj" path="res://resources/fonts/NotoSansMono-VariableFont_wdth,wght.ttf" id="3_53nq8"]
+
+[node name="AoC2023_Day3" node_paths=PackedStringArray("part1TE", "part2TE") instance=ExtResource("1_pyxr4")]
+script = ExtResource("2_2h2om")
+part1TE = NodePath("hbox/VBoxContainer/HBoxContainer/TextEdit")
+part2TE = NodePath("hbox/VBoxContainer/HBoxContainer/TextEdit2")
+
+[node name="DataPanel" parent="hbox/VBoxContainer2" index="1"]
+day = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hbox/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextEdit" type="TextEdit" parent="hbox/VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_53nq8")
+
+[node name="TextEdit2" type="TextEdit" parent="hbox/VBoxContainer/HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_53nq8")

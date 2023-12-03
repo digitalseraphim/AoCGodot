@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="AoC2023"
+config/name="AoCGodot"
 run/main_scene="res://MainScene/MainScene.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
