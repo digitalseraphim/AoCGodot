@@ -7,15 +7,21 @@ public partial class Template : BaseChallengeScene
 {
     public override void DoRun(string[] data)
     {
-        DoPart1(data);
-        DoPart2(data);
+        ParseData(data);
+        DoPart1();
+        DoPart2();
     }
+	private void DoPart1()
+	{
+		resultsPanel.SetPart1Result("result");
+	}
 
-    private void DoPart1(string[] data){
+	private void DoPart2()
+	{
+		resultsPanel.SetPart2Result("result");
+	}
 
-    }
+	private void ParseData(string[] data){
+	}
 
-    private void DoPart2(string[] data){
-
-    }
 }

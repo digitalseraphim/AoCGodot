@@ -116,9 +116,7 @@ public partial class ChallengeDataPanel : Control
 		{
 			string dataFileName = GetTestDataFileName();
 			Directory.GetParent(dataFileName).Create();
-			FileStream f = File.OpenWrite(dataFileName);
-			f.Write(TestDataTE.Text.ToAsciiBuffer());
-			f.Close();
+			File.WriteAllText(dataFileName, TestDataTE.Text);
 
 			EmitSignal(SignalName.RunCode, DataToLines(TestDataTE.Text));
 		}
