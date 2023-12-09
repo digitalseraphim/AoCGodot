@@ -3,7 +3,7 @@ using Godot;
 using System;
 
 namespace AoCGodot;
-public partial class Template : BaseChallengeScene
+public partial class _CLASS_ : BaseChallengeScene
 {
     public override void DoRun(string[] data)
     {
