@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cysc6sybi0l83"]
+[gd_scene load_steps=4 format=3 uid="uid://c7h0l73dhpsxo"]
 
 [ext_resource type="Script" path="res://BaseChallengeScene/BaseChallengeScene.cs" id="1_10dci"]
 [ext_resource type="PackedScene" uid="uid://dt6aufhhcw21t" path="res://ChallengeDataPanel/ChallengeDataPanel.tscn" id="2_gu5oq"]

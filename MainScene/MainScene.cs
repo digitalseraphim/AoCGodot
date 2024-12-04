@@ -15,7 +15,7 @@ public partial class MainScene : MarginContainer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		for(int year = 2015; year <= 2023; year++){
+		for(int year = 2015; year <= 2024; year++){
 			bool foundYear = false;
 
 			for(int day = 1; day <= 25; day ++){
@@ -32,8 +32,9 @@ public partial class MainScene : MarginContainer
 				}
 			}
 		}
-		yearList.Select(0);
-		yearList.EmitSignal(ItemList.SignalName.ItemSelected, 0);
+		
+		yearList.Select(yearList.ItemCount-1, true);
+		yearList.EmitSignal(ItemList.SignalName.ItemSelected, yearList.ItemCount-1);
 	}
 
 	void OnYearSelected(int idx){
@@ -47,6 +48,7 @@ public partial class MainScene : MarginContainer
 
 	void OnButtonPressed(int day){
 		int year = yearList.GetItemText(yearList.GetSelectedItems()[0]).ToInt();
+		Console.WriteLine("Year = " + year);
 		if(scenes.ContainsKey(year) && scenes[year].ContainsKey(day)){
 			GetTree().ChangeSceneToFile(scenes[year][day]);
 		}

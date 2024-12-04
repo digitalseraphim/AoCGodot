@@ -9,10 +9,29 @@ using System.Threading;
 namespace AoCGodot;
 public partial class AoC2023_Day8 : BaseChallengeScene
 {
+	[Export]
+	StaticBody3D Root;
+	[Export]
+	Node3D Container;
+	[Export]
+	PackedScene NodeTemplate;
+
+	[Export]
+	Material StartMaterial;
+	[Export]
+	Material EndMaterial;
+	[Export]
+	Material BaseMaterial;
+
+	[Export]
+	ImmediateMesh ConnectionMesh;
+
 	string instructions;
 	Dictionary<string, Dictionary<char, string>> nodes = new();
 	HashSet<string> ANodes = new();
 	HashSet<string> ZNodes = new();
+
+	Dictionary<string, TemplateNode> node3ds = new();
 
 	public override void DoRun(string[] data)
 	{
@@ -49,7 +68,6 @@ public partial class AoC2023_Day8 : BaseChallengeScene
 					return hs;
 				});
 			GD.Print(curNodes.ToArray().Join("/"));
-			Thread.Sleep(10);
 			steps++;
 		}
 		resultsPanel.SetPart1Result(steps.ToString());
@@ -79,7 +97,7 @@ public partial class AoC2023_Day8 : BaseChallengeScene
 				{
 					// GD.Print(s, " ", newNode, " ", visited[newNode2], " ", steps);
 					loopsize = steps - visited[newNode2];
-					loopsizes.Add(s,loopsize);
+					loopsizes.Add(s, loopsize);
 					break;
 				}
 				else
@@ -98,40 +116,6 @@ public partial class AoC2023_Day8 : BaseChallengeScene
 			GD.Print("loopsize = ", loopsize, "  endinz = ", endinz, " zat = ", zat, " ", znode, " ", nodes[znode].Values.ToArray().Join("/"));
 
 		}
-
-
-
-		// long max = 0;
-		// bool notequal = true;
-
-		// foreach(var v in loopsizes.Values){
-		// 	v.Multiply(8745927);
-		// }
-
-		// while(notequal){
-		// 	notequal = false;
-		// 	foreach(var node in loopsizes.Keys){
-		// 		LoopSize elem = loopsizes[node];
-		// 		if(elem.Zat > max){
-		// 			max = elem.Zat;
-		// 			notequal = true;
-		// 			GD.Print("max ", max);
-		// 		}else if(elem.Zat < max){
-		// 			// while(elem.Zat < max){
-		// 			//elem.Increase();
-		// 			long diff = (max - elem.Zat)/elem.Loopsize;
-		// 			GD.Print("diff ", diff);
-		// 			elem.Zat += (diff+1)*elem.Loopsize;
-		// 			// }
-		// 			notequal = true;
-		// 			if(elem.Zat > max){
-		// 				max = elem.Zat;
-		// 				GD.Print("max ", max);
-		// 			}
-		// 		}
-		// 	}
-		// 	Thread.Sleep(10);
-		// }
 
 		long max = LCM(loopsizes.Values.ToArray());
 
@@ -156,10 +140,15 @@ public partial class AoC2023_Day8 : BaseChallengeScene
 	{
 		instructions = data[0];
 
-
 		nodes.Clear();
 		ANodes.Clear();
 		ZNodes.Clear();
+		node3ds.Clear();
+		foreach (Node n in Container.GetChildren())
+		{
+			Container.RemoveChild(n);
+			n.Free();
+		}
 
 		for (int i = 2; i < data.Length; i++)
 		{
@@ -169,38 +158,127 @@ public partial class AoC2023_Day8 : BaseChallengeScene
 				['L'] = m.Strings[2],
 				['R'] = m.Strings[3]
 			});
+
+			TemplateNode n = NodeTemplate.Instantiate<TemplateNode>();
+			n.Name = m.Strings[1];
+			Container.AddChild(n);
+			n.Position = NodeToPosition(m.Strings[1]);
+			node3ds.Add(n.Name, n);
+			n.Visible = true;
+
 			if (m.Strings[1].EndsWith('A'))
 			{
+				n.Freeze = true;
+				n.Mesh.SetSurfaceOverrideMaterial(0, StartMaterial);
 				ANodes.Add(m.Strings[1]);
 			}
-			if (m.Strings[1].EndsWith('Z'))
+			else if (m.Strings[1].EndsWith('Z'))
 			{
+				n.Mesh.SetSurfaceOverrideMaterial(0, EndMaterial);
 				ZNodes.Add(m.Strings[1]);
 			}
-
+			else
+			{
+				n.Mesh.SetSurfaceOverrideMaterial(0, BaseMaterial);
+			}
 		}
+
+		foreach (TemplateNode n in node3ds.Values)
+		{
+			TemplateNode left = node3ds[nodes[n.Name]['L']];
+			TemplateNode right = node3ds[nodes[n.Name]['R']];
+			n.LeftNode = left;
+			n.RightNode = right;
+		}
+
+		Container.PrintTree();
 	}
 
-	class LoopSize{
-		public long Loopsize{
-			get;set;
+	Vector3 NodeToPosition(string n)
+	{
+		// if(n.EndsWith('A')){
+		// 	return new Vector3(ElemPos(n[0]), ElemPos(n[1]), ElemPos(n[2]));
+		// }else if(n.EndsWith('Z')){
+		// 	return new Vector3(ElemPos(n[0]), ElemPos(n[1]), ElemPos(n[2]));
+
+		// }
+
+		return new Vector3(ElemPos(n[0]), ElemPos(n[1]), ElemPos(n[2]));
+		// return new Vector3(ElemPos(n[0]), ElemPos(n[1]), 0);
+	}
+
+	float ElemPos(char c)
+	{
+		if (Char.IsDigit(c))
+		{
+			return c - '0';
 		}
-		public long Zat{
-			get;set;
+		return c - 'A';
+	}
+
+	class LoopSize
+	{
+		public long Loopsize
+		{
+			get; set;
+		}
+		public long Zat
+		{
+			get; set;
 		}
 
-		public LoopSize(long loopsize, long zat){
+		public LoopSize(long loopsize, long zat)
+		{
 			Loopsize = loopsize;
 			Zat = zat;
 		}
 
-		public void Increase(){
+		public void Increase()
+		{
 			Zat += Loopsize;
 		}
 
-		public void Multiply(long v){
-			Zat += v*Loopsize;
+		public void Multiply(long v)
+		{
+			Zat += v * Loopsize;
 		}
+	}
+
+    public override void _PhysicsProcess(double delta)
+    {
+
+		if (node3ds.Count == 0)
+		{
+			return;
+		}
+
+		foreach (TemplateNode n in node3ds.Values)
+		{
+			if (!n.Name.ToString().EndsWith("A"))
+			{
+				// n.PrepareForce();
+				n.ApplyForce(delta);
+			}
+		}
+		// foreach (TemplateNode n in node3ds.Values)
+		// {
+		// 	if (!n.Name.ToString().EndsWith("A"))
+		// 	{
+		// 		n.ApplyForce(delta);
+		// 	}
+		// }
+		ConnectionMesh.ClearSurfaces();
+		ConnectionMesh.SurfaceBegin(Mesh.PrimitiveType.Lines);
+		foreach (TemplateNode n in node3ds.Values)
+		{
+			ConnectionMesh.SurfaceSetColor(Colors.DarkBlue);
+			ConnectionMesh.SurfaceAddVertex(n.Position);
+			ConnectionMesh.SurfaceAddVertex(n.LeftNode.Position);
+			ConnectionMesh.SurfaceSetColor(Colors.DarkGreen);
+			ConnectionMesh.SurfaceAddVertex(n.Position);
+			ConnectionMesh.SurfaceAddVertex(n.RightNode.Position);
+		}
+		ConnectionMesh.SurfaceEnd();
 	}
 
 }

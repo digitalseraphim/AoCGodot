@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://drl7s18kfch1i"]
+
+[ext_resource type="Script" path="res://AoC2023/Day8/TemplateNode.cs" id="1_rq32s"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mf3ql"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ugjnk"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ekvlx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8y5g4"]
+
+[node name="TemplateNode" type="RigidBody3D" node_paths=PackedStringArray("Mesh")]
+gravity_scale = 0.0
+linear_damp = 39.588
+script = ExtResource("1_rq32s")
+Mesh = NodePath("Mesh")
+
+[node name="InfluenceArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfluenceArea"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+shape = SubResource("SphereShape3D_mf3ql")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ugjnk")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ekvlx")
+surface_material_override/0 = SubResource("StandardMaterial3D_8y5g4")
+
+[connection signal="body_entered" from="InfluenceArea" to="." method="OnBodyEnter"]
+[connection signal="body_exited" from="InfluenceArea" to="." method="OnBodyLeave"]

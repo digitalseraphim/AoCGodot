@@ -85,6 +85,7 @@ public partial class ChallengeDataPanel : Control
 	{
 		string dataFileName = GetChallengeDataFileName();
 		GD.Print(string.Format("got {0} bytes", body.Length));
+		GD.Print(body);
 		Directory.GetParent(dataFileName).Create();
 		File.WriteAllBytes(dataFileName, body);
 		LoadChallengeData();

@@ -1,10 +1,100 @@
-[gd_scene load_steps=3 format=3 uid="uid://8k6u2t2jdspo"]
+[gd_scene load_steps=18 format=3 uid="uid://8k6u2t2jdspo"]
 
-[ext_resource type="PackedScene" uid="uid://cysc6sybi0l83" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_k0mvy"]
+[ext_resource type="PackedScene" uid="uid://c7h0l73dhpsxo" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_k0mvy"]
 [ext_resource type="Script" path="res://AoC2023/Day8/AoC2023_Day8.cs" id="2_pcrv3"]
+[ext_resource type="PackedScene" uid="uid://drl7s18kfch1i" path="res://AoC2023/Day8/TemplateNode.tscn" id="3_t0bhc"]
+[ext_resource type="ImmediateMesh" uid="uid://bfni7s7d6t7lv" path="res://AoC2023/Day8/new_immediate_mesh.tres" id="4_p0f2y"]
 
-[node name="AoC2023_Day8" instance=ExtResource("1_k0mvy")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5qrp3"]
+albedo_color = Color(0, 0.615686, 0.0666667, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hxj54"]
+albedo_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oopgw"]
+
+[sub_resource type="Environment" id="Environment_a48kg"]
+background_mode = 1
+background_color = Color(0.301961, 0.301961, 0.301961, 1)
+
+[sub_resource type="World3D" id="World3D_atdxy"]
+environment = SubResource("Environment_a48kg")
+
+[sub_resource type="Gradient" id="Gradient_oapoc"]
+colors = PackedColorArray(0, 0, 0.847059, 1, 0.105882, 0.427451, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dsynp"]
+gradient = SubResource("Gradient_oapoc")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_evu73"]
+panorama = SubResource("GradientTexture2D_dsynp")
+
+[sub_resource type="Sky" id="Sky_yjr8q"]
+sky_material = SubResource("PanoramaSkyMaterial_evu73")
+
+[sub_resource type="Environment" id="Environment_s3y76"]
+background_mode = 2
+sky = SubResource("Sky_yjr8q")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.33
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hkbkf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_voxy2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cra34"]
+vertex_color_use_as_albedo = true
+
+[node name="AoC2023_Day8" node_paths=PackedStringArray("Root", "Container") instance=ExtResource("1_k0mvy")]
 script = ExtResource("2_pcrv3")
+Root = NodePath("hbox/VBoxContainer/SubViewportContainer/SubViewport/Root")
+Container = NodePath("hbox/VBoxContainer/SubViewportContainer/SubViewport/Root/Container")
+NodeTemplate = ExtResource("3_t0bhc")
+StartMaterial = SubResource("StandardMaterial3D_5qrp3")
+EndMaterial = SubResource("StandardMaterial3D_hxj54")
+BaseMaterial = SubResource("StandardMaterial3D_oopgw")
+ConnectionMesh = ExtResource("4_p0f2y")
 
 [node name="DataPanel" parent="hbox/VBoxContainer2" index="1"]
 day = 8
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="hbox/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="hbox/VBoxContainer/SubViewportContainer" index="0"]
+world_3d = SubResource("World3D_atdxy")
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(2, 2)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport" index="0"]
+transform = Transform3D(-0.67559, 0.430232, -0.598731, 0, 0.812084, 0.583541, 0.737277, 0.394235, -0.548636, -10, 40.805, -10)
+top_level = true
+environment = SubResource("Environment_s3y76")
+current = true
+fov = 74.5863
+
+[node name="Root" type="StaticBody3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport" index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport/Root" index="0"]
+shape = SubResource("SphereShape3D_hkbkf")
+
+[node name="Container" type="Node3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport/Root" index="1"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport" index="2"]
+transform = Transform3D(1, 0, 0, 0, -0.943801, 0.330514, 0, -0.330514, -0.943801, 0, 176.308, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport" index="3"]
+transform = Transform3D(36, 0, 0, 0, 36, 0, 0, 0, 36, 18, 18, 18)
+visible = false
+mesh = SubResource("BoxMesh_voxy2")
+skeleton = NodePath("../Root")
+
+[node name="ConnectionMesh" type="MeshInstance3D" parent="hbox/VBoxContainer/SubViewportContainer/SubViewport" index="4"]
+material_override = SubResource("StandardMaterial3D_cra34")
+mesh = ExtResource("4_p0f2y")
+skeleton = NodePath("../Root")

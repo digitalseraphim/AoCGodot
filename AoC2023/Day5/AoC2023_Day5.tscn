@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3lcicfovwaxi"]
 
-[ext_resource type="PackedScene" uid="uid://cysc6sybi0l83" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_ycche"]
+[ext_resource type="PackedScene" uid="uid://c7h0l73dhpsxo" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_ycche"]
 [ext_resource type="Script" path="res://AoC2023/Day5/AoC2023_Day5.cs" id="2_xuv06"]
 
 [node name="AoC2023_Day5" instance=ExtResource("1_ycche")]
