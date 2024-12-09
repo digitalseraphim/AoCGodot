@@ -10,7 +10,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "D:/Godot_v4.2-stable_mono_win64/Godot_v4.2-stable_mono_win64.exe",
+      "program": "D:/GodotEditors/Godot_v4.4-dev3_mono_win64/Godot_v4.4-dev3_mono_win64.exe",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
@@ -22,7 +22,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "D:/Godot_v4.2-stable_mono_win64/Godot_v4.2-stable_mono_win64.exe",
+      "program": "D:/GodotEditors/Godot_v4.4-dev3_mono_win64/Godot_v4.4-dev3_mono_win64.exe",
       "args": [
         "${fileDirname}/${fileBasenameNoExtension}.tscn"
       ],
@@ -34,7 +34,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "D:/Godot_v4.2-stable_mono_win64/Godot_v4.2-stable_mono_win64.exe",
+      "program": "D:/GodotEditors/Godot_v4.4-dev3_mono_win64/Godot_v4.4-dev3_mono_win64.exe",
       "args": [
         // These command line flags are used by GoDotTest to run tests.
         "--run-tests",
@@ -48,7 +48,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "D:/Godot_v4.2-stable_mono_win64/Godot_v4.2-stable_mono_win64.exe",
+      "program": "D:/GodotEditors/Godot_v4.4-dev3_mono_win64/Godot_v4.4-dev3_mono_win64.exe",
       "args": [
         // These command line flags are used by GoDotTest to run tests.
         "--run-tests=${fileBasenameNoExtension}",

@@ -155,6 +155,20 @@ public class Util
 		return count;
 	}
 
+	public static long LCM(long[] numbers)
+	{
+		return numbers.Aggregate(lcm);
+	}
+	public static long lcm(long a, long b)
+	{
+		return Math.Abs(a * b) / GCD(a, b);
+	}
+	public static long GCD(long a, long b)
+	{
+		return b == 0 ? a : GCD(b, a % b);
+	}
+
+
 }
 
 public static class Extensions
@@ -166,6 +180,15 @@ public static class Extensions
 			}
 		}
 	}
+
+	public static IEnumerable<Tuple<T,T>> Permutations<T>(this IEnumerable<T> source){
+		for(int i = 0; i < source.Count(); i++){
+			for(int j = 0; j < source.Count(); j++){
+				yield return new(source.ElementAt(i),source.ElementAt(j));
+			}
+		}
+	}
+
 
 	public static V GetOrCreate<K,V>(this IDictionary<K,V> dict, K key, Func<V> gen){
 		if(!dict.ContainsKey(key)){
@@ -184,6 +207,12 @@ public static class Extensions
 		return strlist.ToArray().Join(sep);
 	}
 
+    public static IEnumerable<IEnumerable<T>> DifferentCombinations<T>(this IEnumerable<T> elements, int k)
+    {
+        return k == 0 ? new[] { Array.Empty<T>() } :
+          elements.SelectMany((e, i) =>
+            elements.Skip(i + 1).DifferentCombinations(k - 1).Select(c => (new[] {e}).Concat(c)));
+    }
 }
 
 public class Direction
@@ -257,6 +286,10 @@ public class Direction
 	public override string ToString()
 	{
 		return Name;
+	}
+
+	public int Bit(){
+		return 1 << Array.IndexOf(ALL, this);
 	}
 };
 
