@@ -207,6 +207,11 @@ public static class Extensions
 		return strlist.ToArray().Join(sep);
 	}
 
+	public static string Join<V>(this Queue<V> arr, string sep){
+		List<String> strlist = arr.Aggregate(new List<string>(), (l, i) => {l.Add(i.ToString()); return l;});
+		return strlist.ToArray().Join(sep);
+	}
+
     public static IEnumerable<IEnumerable<T>> DifferentCombinations<T>(this IEnumerable<T> elements, int k)
     {
         return k == 0 ? new[] { Array.Empty<T>() } :
