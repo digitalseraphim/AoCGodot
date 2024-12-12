@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b53eyue6evvbc"]
+
+[ext_resource type="PackedScene" uid="uid://c7h0l73dhpsxo" path="res://BaseChallengeScene/BaseChallengeScene.tscn" id="1_57xj5"]
+[ext_resource type="Script" path="res://AoC2024/Day10/AoC2024Day10.cs" id="2_lqjbi"]
+
+[node name="BaseScene" instance=ExtResource("1_57xj5")]
+script = ExtResource("2_lqjbi")
+
+[node name="DataPanel" parent="hbox/VBoxContainer2" index="1"]
+year = 2024
+day = 10
