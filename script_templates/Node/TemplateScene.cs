@@ -11,6 +11,7 @@ public partial class _CLASS_ : BaseChallengeScene
         DoPart1();
         DoPart2();
     }
+	
 	private void DoPart1()
 	{
 		resultsPanel.SetPart1Result("result");

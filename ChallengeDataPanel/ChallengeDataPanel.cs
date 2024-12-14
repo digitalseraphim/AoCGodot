@@ -107,6 +107,10 @@ public partial class ChallengeDataPanel : Control
 		return data.TrimEnd('\n').Split("\n");
 	}
 
+	public bool IsChallengeData(){
+		return DataButtonGroup.GetPressedButton() == UseChallengeDataButton;
+	}
+
 	void OnRun()
 	{
 		if (DataButtonGroup.GetPressedButton() == UseChallengeDataButton)
