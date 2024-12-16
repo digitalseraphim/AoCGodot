@@ -9,6 +9,19 @@ using System.Text.RegularExpressions;
 namespace AoCGodot;
 public partial class AoC2024Day14 : BaseChallengeScene
 {
+	MapDraw M;
+	// HScrollBar sb;
+	Dictionary<char, Color> colormap = new();
+	Color black;
+
+	public void WhenReady(){
+		M = (MapDraw)FindChild("MapDraw");
+		black = new Color("black");
+		colormap['#'] = new Color("green");
+		colormap['@'] = new Color("red");
+		// sb = (HScrollBar)FindChild("FrameNum");
+	}
+
 	public override void DoRun(string[] data)
 	{
 		ParseData(data);
@@ -80,6 +93,11 @@ public partial class AoC2024Day14 : BaseChallengeScene
 
 	private void DoPart2()
 	{
+		OnFrameChange(0);
+		// resultsPanel.SetPart2Result("check treeSearch.txt");
+	}
+
+	private void OnFrameChange(float frame){
 		int width, height;
 
 		if (challengeDataPanel.IsChallengeData())
@@ -92,31 +110,42 @@ public partial class AoC2024Day14 : BaseChallengeScene
 			width = 11;
 			height = 7;
 		}
-		Pos BottomCenter = new( (width - 1) / 2, height - 3);
+		// Pos BottomCenter = new( (width - 1) / 2, height - 3);
 
-		StreamWriter fs = new("treeSearch.txt");
+		GD.Print($"FrameChange {(int)(frame+.1)}");
+		if(Robots == null){
+			return;
+		}
 
-		for (int i = 33; i < (101*103)+1; i+=101)
+		// StreamWriter fs = new("treeSearch.txt");
+
+		int i = 33 + ((int)(frame+.1) * width);
+		resultsPanel.SetPart2Result(i);
+		Map<char> m = new(height, width, ' ');
+		Random rand = new();
+		foreach (var r in Robots)
 		{
-			Map<char> m = new(height, width, ' ');
-			foreach (var r in Robots)
-			{
-				var p = r.PosAfterMove(i, width, height);
+			var p = r.PosAfterMove(i, width, height);
+			if(rand.Next(5) == 0){
+				m.SetValueAt(p, '@');
+			}else{
 				m.SetValueAt(p, '#');
 			}
-
-			// if (m.ValueAt(BottomCenter) == '#'
-			//    && m.ValueAt(BottomCenter.AfterMove(Direction.LEFT)) == '#'
-			//    && m.ValueAt(BottomCenter.AfterMove(Direction.RIGHT)) == '#')
-			{
-				fs.WriteLine($"Second: {i}");
-				fs.WriteLine(m.ToString());
-			}
 		}
-		fs.Close();
+
+		M.SetMap(m, colormap, black);
+
+		// if (m.ValueAt(BottomCenter) == '#'
+		//    && m.ValueAt(BottomCenter.AfterMove(Direction.LEFT)) == '#'
+		//    && m.ValueAt(BottomCenter.AfterMove(Direction.RIGHT)) == '#')
+		// {
+		// 	fs.WriteLine($"Second: {i}");
+		// 	fs.WriteLine(m.ToString());
+		// }
+		// }
+		// fs.Close();
 
 
-		resultsPanel.SetPart2Result("check treeSearch.txt");
 	}
 
 	class Robot

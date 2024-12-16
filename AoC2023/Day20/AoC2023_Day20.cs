@@ -7,8 +7,11 @@ using System.Linq;
 namespace AoCGodot;
 public partial class AoC2023_Day20 : BaseChallengeScene
 {
+	string[] OrigData;
+
 	public override void DoRun(string[] data)
 	{
+		OrigData = data;
 		ParseData(data);
 		DoPart1();
 		DoPart2();
@@ -72,7 +75,64 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 		}
 	}
 
-	private void DoPart2()
+	private void DoPart2(){
+		//reset
+		ParseData(OrigData);
+		
+
+		for (long i = 0; ; i++)
+		{
+			List<Signal> toSend = new(){
+				new(null, Modules["broadcaster"], false)
+			};
+
+			while (toSend.Count > 0)
+			{
+				List<Signal> nextToSend = new();
+
+				foreach (var ping in toSend)
+				{
+					if(ping.Reciever.Name == "rx" && !ping.High){
+						resultsPanel.SetPart1Result(i+1);
+						return;
+					}
+					ping.Reciever.ProcessPulse(ping.Sender, ping.High, nextToSend);
+				}
+
+				toSend = nextToSend;
+			}
+		}
+	}
+
+
+	private void DoPart2_other(){
+		HashSet<Module> used = new();
+		OutputModule rx = (OutputModule)Modules["rx"];
+		Queue<Module> toProcess = new();
+
+		used.Add(rx);
+		toProcess.Enqueue(rx);
+
+		while(toProcess.Any()){
+			Module m = toProcess.Dequeue();
+
+			foreach(var other in Modules){
+				if(other.Value.Outputs.Contains(m)){
+					if(!used.Contains(other.Value)){
+						used.Add(other.Value);
+						toProcess.Enqueue(other.Value);
+					}
+				}
+			}
+		}
+
+		if(used.Count != Modules.Count){
+			GD.Print($"Reduced set of modules from {Modules.Count} to {used.Count}");
+		}
+
+	}
+
+	private void DoPart2Old()
 	{
 		long value = 0;
 		OutputModule rx = (OutputModule)Modules["rx"];
@@ -195,7 +255,7 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 			get;
 		}
 
-		protected HashSet<Module> Outputs = new();
+		public readonly HashSet<Module> Outputs = new();
 		public readonly HashSet<Module> Inputs = new();
 
 		public Module(string name)

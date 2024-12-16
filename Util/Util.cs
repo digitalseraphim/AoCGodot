@@ -16,12 +16,18 @@ public class Util
 			(A.CompareTo(test) >= 0 && test.CompareTo(B) >= 0) :
 			(B.CompareTo(test) >= 0 && test.CompareTo(A) >= 0);
 	}
+
 	public static int Mod(int x, int m)
 	{
 		return ((x % m) + m) % m;
 	}
 
 	public static char[][] ParseCharMap(string[] data)
+	{
+		return ParseCharMap(data.AsSpan());
+	}
+
+	public static char[][] ParseCharMap(Span<string> data)
 	{
 		char[][] map = new char[data.Length][];
 		for (int i = 0; i < data.Length; i++)
@@ -173,51 +179,68 @@ public class Util
 
 public static class Extensions
 {
-	public static IEnumerable<Tuple<T,T>> GetCombinations<T>(this IEnumerable<T> source){
-		for(int i = 0; i < source.Count(); i++){
-			for(int j = i+1; j < source.Count(); j++){
-				yield return new(source.ElementAt(i),source.ElementAt(j));
+	public static IEnumerable<Tuple<T, T>> GetCombinations<T>(this IEnumerable<T> source)
+	{
+		for (int i = 0; i < source.Count(); i++)
+		{
+			for (int j = i + 1; j < source.Count(); j++)
+			{
+				yield return new(source.ElementAt(i), source.ElementAt(j));
 			}
 		}
 	}
 
-	public static IEnumerable<Tuple<T,T>> Permutations<T>(this IEnumerable<T> source){
-		for(int i = 0; i < source.Count(); i++){
-			for(int j = 0; j < source.Count(); j++){
-				yield return new(source.ElementAt(i),source.ElementAt(j));
+	public static IEnumerable<Tuple<T, T>> Permutations<T>(this IEnumerable<T> source)
+	{
+		for (int i = 0; i < source.Count(); i++)
+		{
+			for (int j = 0; j < source.Count(); j++)
+			{
+				yield return new(source.ElementAt(i), source.ElementAt(j));
 			}
 		}
 	}
 
 
-	public static V GetOrCreate<K,V>(this IDictionary<K,V> dict, K key, Func<V> gen){
-		if(!dict.ContainsKey(key)){
+	public static V GetOrCreate<K, V>(this IDictionary<K, V> dict, K key, Func<V> gen)
+	{
+		if (!dict.ContainsKey(key))
+		{
 			dict[key] = gen.Invoke();
 		}
 		return dict[key];
 	}
 
-	public static string Join<V>(this List<V> arr, string sep){
-		List<String> strlist = arr.Aggregate(new List<string>(), (l, i) => {l.Add(i.ToString()); return l;});
+	public static string Join<V>(this List<V> arr, string sep)
+	{
+		List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
 		return strlist.ToArray().Join(sep);
 	}
 
-	public static string Join<V>(this HashSet<V> arr, string sep){
-		List<String> strlist = arr.Aggregate(new List<string>(), (l, i) => {l.Add(i.ToString()); return l;});
+	public static string Join<V>(this HashSet<V> arr, string sep)
+	{
+		List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
 		return strlist.ToArray().Join(sep);
 	}
 
-	public static string Join<V>(this Queue<V> arr, string sep){
-		List<String> strlist = arr.Aggregate(new List<string>(), (l, i) => {l.Add(i.ToString()); return l;});
+	public static string Join<V>(this Queue<V> arr, string sep)
+	{
+		List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
 		return strlist.ToArray().Join(sep);
 	}
 
-    public static IEnumerable<IEnumerable<T>> DifferentCombinations<T>(this IEnumerable<T> elements, int k)
-    {
-        return k == 0 ? new[] { Array.Empty<T>() } :
-          elements.SelectMany((e, i) =>
-            elements.Skip(i + 1).DifferentCombinations(k - 1).Select(c => (new[] {e}).Concat(c)));
-    }
+	public static string Join<V>(this Span<V> arr, string sep)
+	{
+		List<string> strlist = arr.ToArray().Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
+		return strlist.ToArray().Join(sep);
+	}
+
+	public static IEnumerable<IEnumerable<T>> DifferentCombinations<T>(this IEnumerable<T> elements, int k)
+	{
+		return k == 0 ? new[] { Array.Empty<T>() } :
+		  elements.SelectMany((e, i) =>
+			elements.Skip(i + 1).DifferentCombinations(k - 1).Select(c => (new[] { e }).Concat(c)));
+	}
 }
 
 public class Direction
@@ -293,7 +316,8 @@ public class Direction
 		return Name;
 	}
 
-	public int Bit(){
+	public int Bit()
+	{
 		return 1 << Array.IndexOf(ALL, this);
 	}
 };
@@ -630,6 +654,13 @@ public class Map<T> : IEnumerable<Pos>
 	{
 		T old = ValueAt(pos);
 		MapData[pos.Y][pos.X] = v;
+		return old;
+	}
+
+	public T SetValueAt(int X, int Y, T v)
+	{
+		T old = ValueAt(X, Y);
+		MapData[Y][X] = v;
 		return old;
 	}
 
