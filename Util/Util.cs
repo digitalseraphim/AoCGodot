@@ -22,6 +22,11 @@ public class Util
 		return ((x % m) + m) % m;
 	}
 
+	public static long Mod(long x, long m)
+	{
+		return ((x % m) + m) % m;
+	}
+
 	public static char[][] ParseCharMap(string[] data)
 	{
 		return ParseCharMap(data.AsSpan());
@@ -79,7 +84,7 @@ public class Util
 			Path p = paths.First();
 			paths.RemoveAt(0);
 
-			GD.Print(p);
+			// GD.Print(p);
 
 			List<Path> next = p.NextOptions(map);
 			foreach (Path n in next)
@@ -90,7 +95,7 @@ public class Util
 				}
 				if (!visited.Contains("" + n.Position + n.Dir + n.NumInStraightLine))
 				{
-					GD.Print("  Adding: " + n);
+					// GD.Print("  Adding: " + n);
 					visited.Add("" + n.Position + n.Dir + n.NumInStraightLine);
 					Util.AddSorted(n, paths);
 				}
