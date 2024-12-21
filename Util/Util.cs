@@ -246,6 +246,23 @@ public static class Extensions
 		  elements.SelectMany((e, i) =>
 			elements.Skip(i + 1).DifferentCombinations(k - 1).Select(c => (new[] { e }).Concat(c)));
 	}
+
+	public static Tuple<Pos,Pos> FindStartAndEnd(this Map<char> m, char s = 'S', char e = 'E'){
+		Pos start = null;
+		Pos end = null;
+
+		foreach(Pos p in m){
+			var v = m.ValueAt(p);
+			if(v == s){
+				start = p;
+			}else if(v == e){
+				end = p;
+			}
+		}
+
+		return new(start,end);
+	}
+
 }
 
 public class Direction
