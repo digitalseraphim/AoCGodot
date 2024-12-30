@@ -9,8 +9,10 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 {
 	Map<char> Trails = null;
 
-	class Walk : List<Pos>
+	class Walk : List<Pos>, IComparable<Walk>
 	{
+		Pos target;
+
 		public Pos Current
 		{
 			get
@@ -19,16 +21,29 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 			}
 		}
 
-		public Walk(Pos p)
+		public Walk(Pos p, Pos t)
 		{
 			Add(p);
+			target = t;
 		}
 
 		public Walk(Walk other, Pos newCurrent) : base(other)
 		{
 			Add(newCurrent);
+			target = other.target;
 		}
-	}
+
+		public int H{
+			get{
+				return Count + target.Distance(Current);
+			}
+		}
+
+        public int CompareTo(Walk other)
+        {
+            return H.CompareTo(other.H);
+        }
+    }
 
 	public override void DoRun(string[] data)
 	{
@@ -39,10 +54,10 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 
 	private void DoPart1()
 	{
-		List<Walk> toProcess = new(){
-			new(new(1, 0))
-		};
 		Pos end = Trails.LR.AfterMove(Direction.LEFT, 1);
+		List<Walk> toProcess = new(){
+			new(new Pos(1, 0), end)
+		};
 		Walk best = null;
 
 		string slides = "^>v<";
@@ -89,23 +104,20 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 				return hs;
 			});
 
-			if (next.Count > 0)
+			foreach (Pos p in next)
 			{
-				foreach (Pos p in next)
+				Walk n = new(w, p);
+				if (p.Equals(end))
 				{
-					Walk n = new(w, p);
-					if (p.Equals(end))
+					GD.Print("found end ", n.Count);
+					if (best == null || n.Count > best.Count)
 					{
-						GD.Print("found end ", n.Count);
-						if (best == null || n.Count > best.Count)
-						{
-							best = n;
-						}
+						best = n;
 					}
-					else
-					{
-						toProcess.Add(n);
-					}
+				}
+				else
+				{
+					toProcess.Add(n);
 				}
 			}
 		}
@@ -122,18 +134,21 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 
 	private void DoPart2()
 	{
-		List<Walk> toProcess = new(){
-			new(new(1, 0))
-		};
 		Pos end = Trails.LR.AfterMove(Direction.LEFT, 1);
+		List<Walk> toProcess = new(){
+			new(new Pos(1, 0), end)
+		};
 		Walk best = null;
+		Dictionary<Pos, int> LongestRouteTo = new();
 
 		// string slides = "^>v<";
 
+		// answer is 6434
+
 		while (toProcess.Count > 0)
 		{
-			Walk w = toProcess.First();
-			toProcess.RemoveAt(0);
+			Walk w = toProcess.Last();
+			toProcess.RemoveAt(toProcess.Count-1);
 
 			HashSet<Pos> next;
 
@@ -150,23 +165,28 @@ public partial class AoC2023_Day23 : BaseChallengeScene
 				return hs;
 			});
 
-			if (next.Count > 0)
+			foreach (Pos p in next)
 			{
-				foreach (Pos p in next)
+				Walk n = new(w, p);
+
+				// if(LongestRouteTo.ContainsKey(p)){
+				// 	if(n.Count < LongestRouteTo[p]){
+				// 		continue;
+				// 	}
+				// }
+				// LongestRouteTo[p] = n.Count;
+
+				if (p.Equals(end))
 				{
-					Walk n = new(w, p);
-					if (p.Equals(end))
+					GD.Print("found end ", n.Count);
+					if (best == null || n.Count > best.Count)
 					{
-						GD.Print("found end ", n.Count);
-						if (best == null || n.Count > best.Count)
-						{
-							best = n;
-						}
+						best = n;
 					}
-					else
-					{
-						toProcess.Add(n);
-					}
+				}
+				else
+				{
+					toProcess.AddSorted(n);
 				}
 			}
 		}

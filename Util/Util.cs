@@ -56,18 +56,6 @@ public class Util
 		return map;
 	}
 
-	public static int AddSorted<T>(T value, List<T> list) where T : IComparable<T>
-	{
-		int position = list.BinarySearch(value);
-		if (position < 0)
-		{
-			position = ~position;
-		}
-		list.Insert(position, value);
-		return position;
-	}
-
-
 	public static int LowestPathCost(Map<int> map, Pos start, Pos target, int minStraightLine, int maxStraightLine)
 	{
 		List<Path> paths = new();
@@ -97,7 +85,7 @@ public class Util
 				{
 					// GD.Print("  Adding: " + n);
 					visited.Add("" + n.Position + n.Dir + n.NumInStraightLine);
-					Util.AddSorted(n, paths);
+					paths.AddSorted(n);
 				}
 			}
 		}
@@ -178,8 +166,6 @@ public class Util
 	{
 		return b == 0 ? a : GCD(b, a % b);
 	}
-
-
 }
 
 public static class Extensions
@@ -206,6 +192,16 @@ public static class Extensions
 		}
 	}
 
+	public static IEnumerable<Tuple<T, S>> Product<T,S>(this IEnumerable<T> source, IEnumerable<S> other)
+	{
+		for (int i = 0; i < source.Count(); i++)
+		{
+			for (int j = 0; j < other.Count(); j++)
+			{
+				yield return new(source.ElementAt(i), other.ElementAt(j));
+			}
+		}
+	}
 
 	public static V GetOrCreate<K, V>(this IDictionary<K, V> dict, K key, Func<V> gen)
 	{
@@ -216,13 +212,21 @@ public static class Extensions
 		return dict[key];
 	}
 
+	/* can't use IEnumerable or ICollection because it goes recursive
+		public static string Join<V>(this IEnumerable<V> arr, string sep)
+		{
+			List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
+			return  strlist.ToArray().Join(sep);
+		}
+	*/
+
 	public static string Join<V>(this List<V> arr, string sep)
 	{
 		List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
 		return strlist.ToArray().Join(sep);
 	}
 
-	public static string Join<V>(this HashSet<V> arr, string sep)
+	public static string Join<V>(this ISet<V> arr, string sep)
 	{
 		List<string> strlist = arr.Aggregate(new List<string>(), (l, i) => { l.Add(i.ToString()); return l; });
 		return strlist.ToArray().Join(sep);
@@ -247,22 +251,58 @@ public static class Extensions
 			elements.Skip(i + 1).DifferentCombinations(k - 1).Select(c => (new[] { e }).Concat(c)));
 	}
 
-	public static Tuple<Pos,Pos> FindStartAndEnd(this Map<char> m, char s = 'S', char e = 'E'){
+	public static Tuple<Pos, Pos> FindStartAndEnd(this Map<char> m, char s = 'S', char e = 'E')
+	{
 		Pos start = null;
 		Pos end = null;
 
-		foreach(Pos p in m){
+		foreach (Pos p in m)
+		{
 			var v = m.ValueAt(p);
-			if(v == s){
+			if (v == s)
+			{
 				start = p;
-			}else if(v == e){
+			}
+			else if (v == e)
+			{
 				end = p;
 			}
 		}
 
-		return new(start,end);
+		return new(start, end);
 	}
 
+	public static int AddSorted<T>(this List<T> list, T value) where T : IComparable<T>
+	{
+		int position = list.BinarySearch(value);
+		if (position < 0)
+		{
+			position = ~position;
+		}
+		list.Insert(position, value);
+		return position;
+	}
+
+	public static List<string[]> SplitOnBlanks(this string[] data)
+	{
+		List<string[]> ret = new();
+		int start = 0;
+		int i;
+		for (i = 0; i < data.Length; i++)
+		{
+			if (data[i] == "")
+			{
+				ret.Add(data.AsSpan(start, i - start).ToArray());
+				start = i + 1;
+			}
+		}
+
+		if(i != start){
+			ret.Add(data.AsSpan(start, i - start).ToArray());
+		}
+
+		return ret;
+	}
 }
 
 public class Direction
@@ -447,6 +487,16 @@ public class Pos : IEquatable<Pos>
 	public override bool Equals(object obj)
 	{
 		return Equals(obj as Pos);
+	}
+
+	public Pos Mod(int x, int y)
+	{
+		return new(Util.Mod(X, x), Util.Mod(Y, y));
+	}
+
+	public Pos Mod<T>(Map<T> m)
+	{
+		return Mod(m.Width, m.Height);
 	}
 
 	public class NeighborEnum : IEnumerable<Pos>

@@ -62,7 +62,7 @@ public partial class AoC2024Day16 : BaseChallengeScene
 					}
 				}
 				visited[pd] = next.cost;
-				Util.AddSorted(next, paths);
+				paths.AddSorted(next);
 				// GD.Print($"adding {next}");
 			}
 		}

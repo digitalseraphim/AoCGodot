@@ -3,6 +3,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 
 namespace AoCGodot;
 public partial class AoC2023_Day21 : BaseChallengeScene
@@ -73,7 +74,6 @@ public partial class AoC2023_Day21 : BaseChallengeScene
 	private void DoPart2()
 	{
 		Pos start = null;
-		int value = 1;
 
 		foreach (Pos p in Garden)
 		{
@@ -84,82 +84,78 @@ public partial class AoC2023_Day21 : BaseChallengeScene
 			}
 		}
 
+		HashSet<Pos> toProcess = new() { start };
 
-		// Map<char> Map2 = new(Garden);
-		// foreach(Pos p in toProcess){
-		// 	Map2.SetValueAt(p, '!');
-		// }
-		// char c = '0';
-		// foreach(Pos p in start.Neighbors){
-		// 	Map2.SetValueAt(p, c++);
-		// }
-		// GD.Print(Map2);
-		// GD.Print();
+		int iterations = 26501365;
+		// int iterations = 1000;
 
-		Dictionary<string, int> seen = new();
-		Dictionary<Pos, int> numCopies = new();
+		int mod = iterations % Garden.Width;
+		int div = iterations / Garden.Width;
 
-		HashSet<Pos> toProcess = new()
+		List<long> seq = new();
+
+		GD.Print($"mod {mod}, div {div}");
+
+		for (int i = 0; i < mod + (Garden.Width*3); i++)
 		{
-			start
-		};
+			// GD.Print($"Iteration: {i}");
 
-		// int iterations = 26501365;
-		int iterations = 100;
-		for (int i = 0; i < iterations; i++)
-		{
 			HashSet<Pos> next = new();
+
 			foreach (Pos p in toProcess)
 			{
 				foreach (Pos n in p.Neighbors)
 				{
-					Pos n2 = n;
-					if (!Garden.IsInMap(n))
-					{
-						n2 = new(Util.Mod(n.X, Garden.Width), Util.Mod(n.Y, Garden.Height));
-					}
-
-					if (Garden.ValueAt(n2) != '#')
+					if (Garden.ValueAt(n.Mod(Garden)) != '#')
 					{
 						next.Add(n);
 					}
 				}
 			}
 			toProcess = next;
-			if (value < 0)
-			{
-				Map<char> Map2 = new(Garden);
-				foreach (Pos p in toProcess)
-				{
-					Map2.SetValueAt(p, 'O');
-				}
-				// GD.Print(Map2);
-				// GD.Print();
-				string asString = Map2.ToString();
-				if (seen.ContainsKey(asString))
-				{
-					int first = seen[asString];
-					int loop_size = i - first;
-					int extra = 26501365 % loop_size;
-					GD.Print("i = ", i);
-					GD.Print("first = ", first);
-					GD.Print("loop size = ", loop_size);
-					GD.Print("rest = ", extra);
-					int num_loops = 26501365 / loop_size;
-					num_loops -= 10;
-					i += num_loops * loop_size;
-					GD.Print("i = ", i);
-					value = 1;
-				}
-				else
-				{
-					seen[asString] = i;
-				}
+			if((i+1)%Garden.Width == mod){
+				GD.Print($"Iteration: {i+1} / {next.Count}");
+				seq.Add(next.Count);
 			}
-			GD.Print(i, " ", toProcess.Count);
 		}
 
-		resultsPanel.SetPart2Result(toProcess.Count);
+		for(int i = seq.Count; i <= div; i++){
+			long[] diff = seq.Where((x,i)=>i>seq.Count-5).ToArray();
+			// GD.Print(diff.Join(","));
+			List<long> last_values = new(){
+				seq.Last()
+			};
+			do{
+				diff = diff.Zip(diff.Skip(1), (a,b)=>b-a).ToArray();
+				// GD.Print(" " + diff.Join(","));
+				last_values.Add(diff.Last());
+			}while(!diff.All((a)=>a==0));
+			seq.Add(last_values.Sum());
+		}
+
+
+		// GD.Print($" dists - {dists.Join(",")}");
+
+		// Map<char> m = new(Garden);
+		// foreach(var p in seen){
+		// 	m.SetValueAt(p, 'S');
+		// }
+
+		// GD.Print(m);
+
+		// foreach(var p in Garden){
+		// 	GD.Print($"{Divs[p]} {Mods[p]}");
+		// }
+		// Dictionary<Pos, int> counts = new();
+		// foreach(var p in seen){
+		// 	counts[p.Mod(Garden)] = counts.GetValueOrDefault(p.Mod(Garden)) + 1;
+		// }
+
+		// foreach(var p in counts){
+		// 	GD.Print($"{p.Key} => {p.Value}");
+		// }
+
+		resultsPanel.SetPart2Result(seq.Last());
 	}
 
 	private void ParseData(string[] data)

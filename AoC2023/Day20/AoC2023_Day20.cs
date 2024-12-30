@@ -8,6 +8,8 @@ namespace AoCGodot;
 public partial class AoC2023_Day20 : BaseChallengeScene
 {
 	string[] OrigData;
+	static long ButtonPress;
+
 
 	public override void DoRun(string[] data)
 	{
@@ -18,6 +20,7 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 	}
 	private void DoPart1()
 	{
+		ButtonPress = -1;
 		SignalTracker signalTracker = new();
 
 		for (int i = 0; i < 1000; i++)
@@ -75,13 +78,15 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 		}
 	}
 
+
 	private void DoPart2(){
 		//reset
 		ParseData(OrigData);
 		
 
-		for (long i = 0; ; i++)
+		for (ButtonPress = 1; ButtonPress > 0; ButtonPress++)
 		{
+			GD.Print($"Button press {ButtonPress}");
 			List<Signal> toSend = new(){
 				new(null, Modules["broadcaster"], false)
 			};
@@ -93,7 +98,7 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 				foreach (var ping in toSend)
 				{
 					if(ping.Reciever.Name == "rx" && !ping.High){
-						resultsPanel.SetPart1Result(i+1);
+						resultsPanel.SetPart2Result(ButtonPress+1);
 						return;
 					}
 					ping.Reciever.ProcessPulse(ping.Sender, ping.High, nextToSend);
@@ -102,6 +107,14 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 				toSend = nextToSend;
 			}
 		}
+		var zh = (Conjunction)Modules["zh"];
+		List<long> presses = new();
+		foreach(var x in zh.InputHighPresses){
+			GD.Print($"{x.Key}: {x.Value.Join(",")}");
+			presses.Add(x.Value.First());
+		}
+
+		resultsPanel.SetPart2Result(Util.LCM(presses.ToArray()));
 	}
 
 
@@ -340,6 +353,8 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 	class Conjunction : Module
 	{
 		readonly Dictionary<Module, bool> InputValues = new();
+		public readonly Dictionary<Module, List<long>> InputHighPresses = new();
+		
 		public Conjunction(string name) : base(name)
 		{
 
@@ -347,6 +362,15 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 
 		public override void ProcessPulse(Module sender, bool high, List<Signal> nextToSend)
 		{
+			if(Name == "zh" && AoC2023_Day20.ButtonPress > 0){
+				GD.Print($"{(high?"  high":"low")} from {sender.Name}");
+				if(high){
+					InputHighPresses[sender].Add(AoC2023_Day20.ButtonPress);
+					if(InputHighPresses.All((x)=>x.Value.Count >= 1)){
+						AoC2023_Day20.ButtonPress = -1;
+					}
+				}
+			}
 			InputValues[sender] = high;
 
 			SendPulse(!InputValues.All((p) => p.Value), nextToSend);
@@ -361,6 +385,7 @@ public partial class AoC2023_Day20 : BaseChallengeScene
 		{
 			base.AddInput(m);
 			InputValues.Add(m, false);
+			InputHighPresses[m] = new();
 		}
 
 		public override string ToString()
